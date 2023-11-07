@@ -1,0 +1,141 @@
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode
+
+### VisualStudioCode ###
+.vscode/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+# !.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+#
+# For Makefile
+#
+build/
+
+#
+# For Keil
+#
+obj/
+lst/
+
+#
+# For IAR
+#
+Debug/
+Release/
+settings/
+
+#
+# For GCC
+#
+
+!.cproject
+!.project
+!.ld
+!.S
+
+Packages/
+version.ini
+.lock
+.location
+.markers
+.history/
+.mylyn/
+.settings/
+RemoteSystemsTempFiles/
+Source/*/*/GCC/.metadata/.plugins/*
+Source/*/*/packages/
+Source/*/GCC/.metadata/.plugins/*
+Source/*/packages/
+
+org.eclipse.core.resources/*.snap
+
+!Source/*/*/GCC/.metadata/.plugins/org.eclipse.core.resources/
+!Source/*/*/GCC/.metadata/.plugins/org.eclipse.debug.core/
+!Source/*/*/GCC/.metadata/.plugins/org.eclipse.debug.ui/
+!Source/*/*/GCC/.metadata/.plugins/org.eclipse.e4.workbench/
+!Source/*/*/GCC/.metadata/.plugins/org.eclipse.core.resources/.projects/RemoteSystemsTempFiles/
+
+!Source/*/GCC/.metadata/.plugins/org.eclipse.core.resources/
+!Source/*/GCC/.metadata/.plugins/org.eclipse.debug.core/
+!Source/*/GCC/.metadata/.plugins/org.eclipse.debug.ui/
+!Source/*/GCC/.metadata/.plugins/org.eclipse.e4.workbench/
+!Source/*/GCC/.metadata/.plugins/org.eclipse.core.resources/.projects/RemoteSystemsTempFiles/
+
+#
+# For OSX
+#
+.DS_Store
+
+#
+# Files
+#
+*.log
+*.dep
+*.bak
+*.uvgui.*
+*.uvguix.*
+*.uvopt
+*.uvproj.saved_uv4
+*.scvd
+*.txt
+*.old
+*.bin
+*.obj
+*.orig
+*.ok
+*~
+*.o
+*.i
+*.lst
+*.map
+*.d
+*.crf
+*.axf
+*.out
+*.pbi
+*.cout
+*.browse
+*.scc
+*.ewt
+
+#
+# Large stuff
+#
+*.zip
+*.gz
+*.bz
+*.gzip
+*.7z
+*.rar
+
+#
+# Exception
+#
+!Source/StdDriver/FMC_IAP/IAR/Release/
+!Source/StdDriver/FMC_IAP/IAR/Release/Exe/
+!Source/StdDriver/FMC_IAP/IAR/Release/Exe/fmc_ld_iap.bin
+!Source/StdDriver/FMC_IAP/KEIL/obj/
+!Source/StdDriver/FMC_IAP/KEIL/obj/fmc_ld_iap.bin
+!Source/StdDriver/FMC_IAP/GCC/LDROM_iap/LDROM_iap.bin
+
+!Source/RegBased/FMC_IAP/IAR/Release/
+!Source/RegBased/FMC_IAP/IAR/Release/Exe/
+!Source/RegBased/FMC_IAP/IAR/Release/Exe/fmc_ld_iap.bin
+!Source/RegBased/FMC_IAP/KEIL/obj/
+!Source/RegBased/FMC_IAP/KEIL/obj/fmc_ld_iap.bin
+!Source/RegBased/FMC_IAP/GCC/LDROM_iap/LDROM_iap.bin
