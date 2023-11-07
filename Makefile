@@ -21,7 +21,7 @@ OPT = -O3 # -O0, -O1, -O2, -O3, -Os, -Ofast or -Og for debug build (default)
 # paths
 #######################################
 # Build path
-BUILD_DIR = "Source/build"
+BUILD_DIR = Source/build
 
 ######################################
 # source
@@ -188,7 +188,7 @@ $(BUILD_DIR):
 #######################################
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q /F $(BUILD_DIR)
+	del /Q /F "$(BUILD_DIR)"
 else
 	rm -rf $(BUILD_DIR)
 endif
