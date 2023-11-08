@@ -21,7 +21,11 @@ OPT = -O3 # -O0, -O1, -O2, -O3, -Os, -Ofast or -Og for debug build (default)
 # paths
 #######################################
 # Build path
-BUILD_DIR = Source/build
+ifeq ($(OS),Windows_NT)
+    BUILD_DIR := Source\build
+else
+    BUILD_DIR := Source/build
+endif
 
 ######################################
 # source
