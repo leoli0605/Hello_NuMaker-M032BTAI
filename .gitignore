@@ -139,3 +139,6 @@ org.eclipse.core.resources/*.snap
 !Source/RegBased/FMC_IAP/KEIL/obj/
 !Source/RegBased/FMC_IAP/KEIL/obj/fmc_ld_iap.bin
 !Source/RegBased/FMC_IAP/GCC/LDROM_iap/LDROM_iap.bin
+
+### MISC. ###
+startup_M031Series.s
