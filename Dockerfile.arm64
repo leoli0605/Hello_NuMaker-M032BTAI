@@ -1,0 +1,17 @@
+# Use an explicit version for reproducibility
+FROM ubuntu:20.04
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y wget make cpio libncurses5 xz-utils && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Get the toolchain
+RUN wget "https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-aarch64-arm-none-eabi.tar.xz" -O arm-gnu-toolchain-13.2.rel1-aarch64-arm-none-eabi.tar.xz && \
+    mkdir arm-none-eabi-gcc && \
+    tar xf arm-gnu-toolchain-13.2.rel1-aarch64-arm-none-eabi.tar.xz -C arm-none-eabi-gcc --strip-components 1 && \
+    rm arm-gnu-toolchain-13.2.rel1-aarch64-arm-none-eabi.tar.xz
+
+# Add the tools to the path
+ENV PATH="/arm-none-eabi-gcc/bin:${PATH}"

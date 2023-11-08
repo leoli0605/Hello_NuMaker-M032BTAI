@@ -62,6 +62,9 @@ Source/user.c
 ASM_SOURCES =  \
 Source/Library/Device/Nuvoton/M031/Source/GCC/startup_M031Series.S
 
+# List of assembly source file names without directory paths and without extension
+ASM_BASENAMES = $(basename $(notdir $(ASM_SOURCES)))
+
 
 #######################################
 # binaries
@@ -151,7 +154,7 @@ LIBDIR = -LSource/Lib
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: clean $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 
 #######################################
@@ -167,7 +170,7 @@ vpath %.S $(sort $(dir $(ASM_SOURCES)))
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
@@ -189,8 +192,10 @@ $(BUILD_DIR):
 clean:
 ifeq ($(OS),Windows_NT)
 	del /Q /F "$(BUILD_DIR)"
+	$(foreach asmfile,$(ASM_BASENAMES),del /Q /F "$(asmfile).s" &)
 else
 	rm -rf $(BUILD_DIR)
+	$(foreach asmfile,$(ASM_BASENAMES),rm -f "$(asmfile).s";)
 endif
 
 #######################################
