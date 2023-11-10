@@ -11,10 +11,10 @@ TARGET = TRSP_UART_Central
 ######################################
 # building variables
 ######################################
-# debug build?
+# debug build? 0: for release build (no debug info), 1: for debug build (with debug info)
 DEBUG = 1
-# optimization
-OPT = -O3 # -O0, -O1, -O2, -O3, -Os, -Ofast or -Og for debug build (default)
+# optimization: -O0, -O1, -O2, -O3, -Os, -Ofast or -Og for debug build (default)
+OPT = -O3
 
 
 #######################################
@@ -42,6 +42,7 @@ Source/Library/Device/Nuvoton/M031/Source/system_M031Series.c \
 Source/Library/StdDriver/src/clk.c \
 Source/Library/StdDriver/src/fmc.c \
 Source/Library/StdDriver/src/gpio.c \
+Source/Library/StdDriver/src/i2c.c \
 Source/Library/StdDriver/src/pdma.c \
 Source/Library/StdDriver/src/retarget.c \
 Source/Library/StdDriver/src/spi.c \
@@ -49,7 +50,6 @@ Source/Library/StdDriver/src/sys.c \
 Source/Library/StdDriver/src/timer.c \
 Source/Library/StdDriver/src/uart.c \
 Source/Library/StdDriver/src/wdt.c \
-Source/main.c \
 Source/Porting/dev_addr.c \
 Source/Porting/porting_flash.c \
 Source/Porting/porting_misc.c \
@@ -60,7 +60,9 @@ Source/Service/DIS/ble_service_dis.c \
 Source/Service/GAP/ble_service_gap.c \
 Source/Service/GATT/ble_service_gatt.c \
 Source/Service/UDF01S/ble_service_udf01s.c \
-Source/user.c
+Source/user.c \
+Source/main.c
+
 
 # ASM sources
 ASM_SOURCES =  \
@@ -110,8 +112,11 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 AS_DEFS =
 
 # C defines
-C_DEFS =
+C_DEFS = \
 
+ifeq ($(DEBUG), 1)
+C_DEFS += -DDEBUG
+endif
 
 # AS includes
 AS_INCLUDES =
@@ -119,10 +124,12 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ISource/BleAppProfile \
--ISource/Library/CMSIS/Include \
--ISource/Library/StdDriver/inc \
--ISource/Library/Device/Nuvoton/M031/Include \
+-ISource/Driver \
+-ISource/Driver/lsm6dso16is \
 -ISource/Include \
+-ISource/Library/CMSIS/Include \
+-ISource/Library/Device/Nuvoton/M031/Include \
+-ISource/Library/StdDriver/inc \
 -ISource/Porting \
 -ISource/Service/BleServiceBase \
 -ISource/Service/DIS \
@@ -141,7 +148,6 @@ ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
 
-
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
@@ -158,7 +164,7 @@ LIBDIR = -LSource/Lib
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: clean $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 
 #######################################

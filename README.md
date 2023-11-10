@@ -1,6 +1,16 @@
-# Hello_NuMaker-M032BTAI
+# DURIN ACC MCU
+
+- Quick Commands on Windows:
+
+```shell
+git submodule update --init --recursive && make clean && make && copy Source\build\TRSP_UART_Central.bin F:\
+```
 
 ## Building
+
+```shell
+git submodule update --init --recursive
+```
 
 ### Build Binaries with Docker
 
@@ -41,5 +51,11 @@ docker stop arm-none-eabi-gcc-container
 ## Upgrading
 
 ```bash
+# Windows
 copy Source\build\TRSP_UART_Central.bin F:\
+```
+
+```shell
+# Mac/Linux
+cp Source/build/TRSP_UART_Central.bin /Volumes/NO\ NAME/
 ```
