@@ -1,4 +1,4 @@
-# DURIN ACC MCU
+# Hello_NuMaker-M032BTAI
 
 - Quick Commands on Windows:
 
