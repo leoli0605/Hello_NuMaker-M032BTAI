@@ -99,10 +99,21 @@ BIN = $(CP) -O binary -S
 CPU = -mcpu=cortex-m0
 
 # fpu
-# NONE for Cortex-M0/M0+/M3
+ifeq ($(CPU), -mcpu=cortex-m4)
+FPU = -mfpu=fpv4-sp-d16
+else ifeq ($(CPU), -mcpu=cortex-m7)
+FPU = -mfpu=fpv5-sp-d16
+else
+# Cortex-M0/M0+/M3 is not supported by FPU
+FPU =
+endif
 
 # float-abi
-
+ifeq ($(FPU),)
+FLOAT-ABI = -mfloat-abi=soft
+else
+FLOAT-ABI = -mfloat-abi=hard
+endif
 
 # mcu
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
