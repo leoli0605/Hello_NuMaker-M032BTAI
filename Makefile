@@ -74,7 +74,6 @@ Source/Service/UDF01S/ble_service_udf01s.c \
 Source/user.c \
 Source/main.c
 
-
 # ASM sources
 ASM_SOURCES =  \
 Source/Library/Device/Nuvoton/M031/Source/GCC/startup_M031Series.S
@@ -142,7 +141,6 @@ else
 C_DEFS += -DDISABLE_UART
 endif
 
-
 # AS includes
 AS_INCLUDES =
 
@@ -172,6 +170,7 @@ CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
+
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
