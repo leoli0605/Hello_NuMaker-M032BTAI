@@ -1,5 +1,10 @@
 # ------------------------------------------------
 # Generic Makefile (based on gcc)
+#
+# ChangeLog :
+#       2023-11-21 - Make the project can be auto-selected by the user setup
+#	2017-02-10 - Several enhancements + project update mode
+#   2015-07-22 - first version
 # ------------------------------------------------
 
 ######################################
@@ -14,7 +19,11 @@ TARGET = TRSP_UART_Central
 # debug build? 0: for release build (no debug info), 1: for debug build (with debug info)
 DEBUG = 1
 # optimization: -O0, -O1, -O2, -O3, -Os, -Ofast or -Og for debug build (default)
-OPT = -O3
+ifeq ($(DEBUG), 1)
+OPT = -Og
+else
+OPT = -O2
+endif
 
 
 #######################################
@@ -22,9 +31,11 @@ OPT = -O3
 #######################################
 # Build path
 ifeq ($(OS),Windows_NT)
-    BUILD_DIR := Source\build
+# windows path: your\build\path
+BUILD_DIR := Source\build
 else
-    BUILD_DIR := Source/build
+# linux path: your/build/path
+BUILD_DIR := Source/build
 endif
 
 ######################################
@@ -127,7 +138,10 @@ C_DEFS = \
 
 ifeq ($(DEBUG), 1)
 C_DEFS += -DDEBUG
+else
+C_DEFS += -DDISABLE_UART
 endif
+
 
 # AS includes
 AS_INCLUDES =
