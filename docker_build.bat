@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 
 :: Set image and container names
-SET "IMAGE_NAME=jafee201153/arm-none-eabi-gcc:13.2-ubuntu-20.04"
+SET "IMAGE_NAME=jafee201153/arm-none-eabi-gcc:latest-ubuntu-20.04"
 SET "CONTAINER_NAME=arm-none-eabi-gcc-container"
 
 :: Define the SSH key paths
