@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set image and container names
-IMAGE_NAME="jafee201153/arm-none-eabi-gcc:13.2-ubuntu-20.04"
+IMAGE_NAME="jafee201153/arm-none-eabi-gcc:latest-ubuntu-20.04"
 CONTAINER_NAME="arm-none-eabi-gcc-container"
 
 # Define the SSH key paths
