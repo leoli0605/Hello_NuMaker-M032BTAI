@@ -7,6 +7,12 @@
 #   2015-07-22 - first version
 # ------------------------------------------------
 
+ifeq ($(OS),Windows_NT)
+DATE = $(shell echo %date:~0,4%-%date:~5,2%-%date:~8,2%)
+else
+DATE = $(shell date +%Y-%m-%d)
+endif
+
 ######################################
 # target
 ######################################
@@ -32,7 +38,9 @@ endif
 # Build path
 ifeq ($(OS),Windows_NT)
 # windows path: your\build\path
-BUILD_DIR := Source\build
+fixpath = $(if $(findstring ",$(1)"),$(subst \,\\,$(1)),$(1))
+BUILD_DIR := $(call fixpath,Source\build)
+# BUILD_DIR := Source\build
 else
 # linux path: your/build/path
 BUILD_DIR := Source/build
@@ -163,9 +171,9 @@ C_INCLUDES =  \
 
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -Wno-unknown-pragmas
 
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -Wno-unknown-pragmas
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
@@ -180,11 +188,13 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = Source/Toolchain/GCC/M031_128K.ld
+LDSCRIPT = Source/Toolchain/GCC/M032_512K.ld
 
 # libraries
-LIBS = -lc -lm -lnosys -lBLELIB_GCC_C
-LIBDIR = -LSource/Lib
+LIBS = -lc -lm -lnosys \
+-lBLELIB_GCC_C
+LIBDIR = \
+-LSource/Lib
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
@@ -231,6 +241,38 @@ else
 	rm -rf $(BUILD_DIR)
 	$(foreach asmfile,$(ASM_BASENAMES),rm -f "$(asmfile).s";)
 endif
+
+#######################################
+# flash
+#######################################
+flash:
+	pyocd flash --erase chip --target M032BTAIAAN ./$(BUILD_DIR)/$(TARGET).bin --base-address 0x00000000
+
+#######################################
+# rebuild
+#######################################
+rebuild: clean all
+
+#######################################
+# upgrade
+#######################################
+upgrade:
+	git submodule update --init --recursive
+# ifeq ($(OS),Windows_NT)
+# 	copy $(subst /,\,$(CURDIR))\assets\utility_config.h $(subst /,\,$(CURDIR))\Source\UtilityClang\utility_config.h
+# else
+# 	cp $(CURDIR)/assets/utility_config.h $(CURDIR)/Source/UtilityClang/utility_config.h
+# endif
+	make clean
+	make all
+	make flash
+
+#######################################
+# documentation
+#######################################
+docs:
+	pandoc -f markdown -t gfm -o README.md README_.md
+	pandoc -f markdown -t pdf -o README.pdf README_.md --pdf-engine=xelatex --toc-depth=3 --number-sections --template=assets/eisvogel.latex --listings --variable date=$(DATE)
 
 #######################################
 # dependencies
