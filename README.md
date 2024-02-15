@@ -1,61 +1,88 @@
 # Hello_NuMaker-M032BTAI
 
-- Quick Commands on Windows:
+## Prerequisites
 
-```shell
-git submodule update --init --recursive && make clean && make && copy Source\build\TRSP_UART_Central.bin F:\
+Before proceeding with the commands, ensure you have the following
+installed:
+
+- `make`
+- `gcc-arm-none-eabi` or `docker`
+- `Python 3.7+` and `pip` (for flashing and debugging)
+
+## Quick Commands
+
+The following quick commands are available for convenience:
+
+- `make upgrade`: Executes `make clean`, `make`, and `make flash`
+  sequentially.
+
+## Building the Firmware
+
+### Using Makefile
+
+To build the firmware using Makefile, run:
+
+``` bash
+make clean && make
 ```
 
-## Building
+## Flashing the Firmware
 
-```shell
-git submodule update --init --recursive
+We use [pyOCD](https://pypi.org/project/pyocd/) for cross-platform
+compatibility and to support the latest versions.
+[OpenOCD](https://github.com/OpenNuvoton/OpenOCD-Nuvoton) is not used in
+this process.
+
+### Installing pyOCD
+
+First, install `pyOCD` using `pip`:
+
+``` bash
+python -m pip install -U pyocd
 ```
 
-### Build Binaries with Docker
+### Installing the Required Pack
 
-- Get the docker image from [Docker Hub](https://hub.docker.com/r/jafee201153/arm-none-eabi-gcc) and run the following commands:
+Next, install the pack for the target MCU:
 
-```shell
-docker pull jafee201153/arm-none-eabi-gcc:13.2-ubuntu-20.04
+``` bash
+pyocd pack install M032BTAIAAN
 ```
 
-- Start the container:
+### Flashing the MCU
 
-```shell
-# Mac/Linux
-docker run --name arm-none-eabi-gcc-container --rm -v ${PWD}:/share -d -it jafee201153/arm-none-eabi-gcc:13.2-ubuntu-20.04 sh
+Finally, flash the MCU with the following command:
+
+``` bash
+make flash
 ```
 
-```bash
-# Windows
-docker run --name arm-none-eabi-gcc-container --rm -v "%cd%":/share -d -it jafee201153/arm-none-eabi-gcc:13.2-ubuntu-20.04 sh
+## Debugging the Firmware
+
+To debug the firmware manually, use the following commands:
+
+### Starting the GDB Server
+
+Start the GDB server with `pyOCD`:
+
+``` bash
+pyocd gdbserver -t M032BTAIAAN --elf Source\build\TRSP_UART_Central.elf
 ```
 
-- Build the binaries:
+### Connecting GDB to the Target
 
-```shell
-docker exec arm-none-eabi-gcc-container sh -c "cd /share && make clean && make"
+In the GDB command line, connect to the target and load the firmware:
+
+``` bash
+(gdb) target remote localhost:3333
+(gdb) monitor reset halt
+(gdb) load
 ```
 
-- Stop the container:
+## Documentation
 
-```shell
-docker stop arm-none-eabi-gcc-container
-```
+To build the documentation, run:
 
-///
-
-> Hint: or just run `build.bat` on Windows, `build.sh` on Mac/Linux.
-
-## Upgrading
-
-```bash
-# Windows
-copy Source\build\TRSP_UART_Central.bin F:\
-```
-
-```shell
-# Mac/Linux
-cp Source/build/TRSP_UART_Central.bin /Volumes/NO\ NAME/
+``` bash
+make docs
 ```

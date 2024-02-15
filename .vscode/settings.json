@@ -1,0 +1,38 @@
+{
+    "files.associations": {
+        "**/frontmatter.json": "jsonc",
+        "**/.frontmatter/config/*.json": "jsonc",
+        "*.cfg": "cpp",
+        ".env*": "dotenv",
+        "arm_c.h": "c",
+        "stddef.h": "c",
+        "stdlib.h": "c",
+        "stdbool.h": "c",
+        "mcu_definition.h": "c",
+        "numicro.h": "c",
+        "ble_profile.h": "c",
+        "gpio.h": "c",
+        "porting_misc.h": "c",
+        "porting_rfpower.h": "c",
+        "bleappsetting.h": "c",
+        "m031series.h": "c",
+    },
+    "Workspace_Formatter.includePattern": [
+        "*.c",
+        "*.h"
+    ],
+    "Workspace_Formatter.excludePattern": [
+        "**/build",
+        "**/.*",
+        "**/.vscode",
+        "**/Source/Include",
+        "**/Source/Lib",
+        "**/Source/Library",
+        "**/Source/Porting",
+        "**/Source/Service",
+        "**/Source/ThirdParty",
+    ],
+    "folder-path-color.folders": [
+        // { "path": "Source/User/ThirdParty/decadriver", "symbol": "🤦‍♂️", "color": "magenta" }
+    ]
+}
