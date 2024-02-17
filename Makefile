@@ -272,7 +272,45 @@ upgrade:
 #######################################
 docs:
 	pandoc -f markdown -t gfm -o README.md README_.md
-	pandoc -f markdown -t pdf -o README.pdf README_.md --pdf-engine=xelatex --toc-depth=3 --number-sections --template=assets/eisvogel.latex --listings --variable date=$(DATE)
+	pandoc -f markdown -t pdf -o README.pdf README_.md --pdf-engine=xelatex --toc-depth=3 --number-sections --template=eisvogel.latex --listings --variable date=$(DATE) --lua-filter=diagram.lua
+
+docs-install:
+ifeq ($(OS),Windows_NT)
+	@echo "Fetching the latest Eisvogel release URL..."
+	@powershell -Command "$$LATEST_RELEASE_URL = $$(Invoke-RestMethod -Uri 'https://api.github.com/repos/Wandmalfarbe/pandoc-latex-template/releases/latest' | Select-Object -ExpandProperty assets | Where-Object { $$_.name -like '*eisvogel*.zip' } | Select-Object -First 1 -ExpandProperty browser_download_url); \
+	if ([string]::IsNullOrEmpty($$LATEST_RELEASE_URL)) { \
+		Write-Error 'Error: Unable to retrieve the release URL.'; \
+		exit 1; \
+	}; \
+	Write-Host 'Downloading Eisvogel template...'; \
+	Invoke-WebRequest -Uri $$LATEST_RELEASE_URL -OutFile 'Eisvogel.zip'; \
+	Write-Host 'Unzipping the template...'; \
+	Expand-Archive -Path 'Eisvogel.zip' -DestinationPath $$env:USERPROFILE'\AppData\Roaming\pandoc\templates' -Force; \
+	Remove-Item 'Eisvogel.zip';"
+	@echo "Fetching the latest diagram.lua release URL..."
+	@powershell -Command "$$filtersPath = \"$$(Join-Path $$env:USERPROFILE 'AppData\Roaming\pandoc\filters')\"; \
+	if (!(Test-Path -Path $$filtersPath)) { \
+		New-Item -ItemType Directory -Path $$filtersPath; \
+	} \
+	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/leoli0605/diagram/main/_extensions/diagram/diagram.lua' -OutFile \"$$(Join-Path $$filtersPath 'diagram.lua')\";"
+else
+	# Unix-like commands (macOS and Linux)
+	@echo "Fetching the latest Eisvogel release URL..."
+	@LATEST_RELEASE_URL=$$(curl -s https://api.github.com/repos/Wandmalfarbe/pandoc-latex-template/releases/latest | jq -r '.assets[] | select(.name | endswith(".zip")) | .browser_download_url' | head -n 1); \
+	if [ -z "$$LATEST_RELEASE_URL" ]; then \
+		echo "Error: Unable to retrieve the release URL."; \
+		exit 1; \
+	fi; \
+	echo "Downloading Eisvogel template..."; \
+	curl -L -o Eisvogel.zip "$$LATEST_RELEASE_URL"; \
+	echo "Unzipping the template to $$HOME/.pandoc/templates..."; \
+	mkdir -p $$HOME/.pandoc/templates; \
+	unzip Eisvogel.zip -d $$HOME/.pandoc/templates; \
+	rm Eisvogel.zip
+	@echo "Fetching the latest diagram.lua release URL..."
+	mkdir -p ~/.pandoc/filters
+	curl -L https://raw.githubusercontent.com/leoli0605/diagram/main/_extensions/diagram/diagram.lua -o $$HOME/.pandoc/filters/diagram.lua
+endif
 
 #######################################
 # dependencies

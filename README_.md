@@ -79,37 +79,39 @@ In the GDB command line, connect to the target and load the firmware:
 (gdb) load
 ```
 
+\pagebreak
+
 ## Documentation
 
 To build the documentation, run:
 
-``` bash
+```bash
 make docs
 ```
 
 ### You need to install these software first
 
-- On Windows:
+* On Windows:
 
-``` bash
+```bash
 choco install -y pandoc miktex
 ```
 
-- On macOS:
+* On macOS:
 
-``` bash
+```bash
 brew install pandoc
 brew install --cask mactex-no-gui
 ```
 
-- On Linux:
+* On Linux:
 
-``` bash
+```bash
 sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
 ```
 
-- Then, install the required extensions:
+* Then, install the required extensions:
 
-``` bash
+```bash
 make docs-install
 ```
