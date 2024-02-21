@@ -299,7 +299,7 @@ upgrade:
 #######################################
 docs:
 	pandoc -f markdown -t gfm -o README.md README_.md
-	pandoc -f markdown -t pdf -o README.pdf README_.md --pdf-engine=xelatex --toc-depth=3 --number-sections --template=eisvogel.latex --listings --variable date=$(DATE) --lua-filter=diagram.lua
+	pandoc -f markdown -t pdf -o README.pdf README_.md --pdf-engine=texlive --toc-depth=3 --number-sections --template=eisvogel.latex --listings --variable date=$(DATE) --lua-filter=diagram.lua
 
 docs-install:
 ifeq ($(OS),Windows_NT)
