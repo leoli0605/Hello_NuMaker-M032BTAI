@@ -41,6 +41,10 @@ jobs:
             - name: Install Pandoc Filters
               run: make docs-install
 
+            - uses: actions/setup-node@v4
+            - name: Install Mermaid-CLI
+              run: npm install -g @mermaid-js/mermaid-cli
+
             - name: Generate README
               run: make docs
 
