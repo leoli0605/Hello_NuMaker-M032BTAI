@@ -26,6 +26,12 @@ To build the firmware using Makefile, run:
 make clean && make
 ```
 
+or build the firmware using Docker:
+
+``` bash
+make update && make docker
+```
+
 ## Flashing the Firmware
 
 We use [pyOCD](https://pypi.org/project/pyocd/) for cross-platform
