@@ -16,30 +16,35 @@ jobs:
 
             - name: Install Required Packages
               run: |
-                sudo apt update && \
-                sudo apt upgrade -y && \
-                sudo apt install -y \
-                make \
-                jq \
-                unzip \
-                texlive-latex-base \
-                texlive-fonts-recommended \
-                texlive-fonts-extra \
-                texlive-latex-extra && \
-                LATEST_RELEASE_URL=$$(curl -s https://github.com/jgm/pandoc/releases/latest | jq -r '.assets[] | select(.name | endswith("-linux-amd64.tar.gz")) | .browser_download_url' | head -n 1); && \
-                curl -L -o pandoc.tar.gz $$LATEST_RELEASE_URL && \
-                tar -xvzf pandoc.tar.gz --strip-components 1 -C /usr/local && \
-                rm pandoc.tar.gz && \
-                pandoc --version && \
-                make docs-install
+                  sudo apt update && \
+                  sudo apt upgrade -y && \
+                  sudo apt install -y \
+                  make \
+                  jq \
+                  unzip \
+                  texlive-latex-base \
+                  texlive-fonts-recommended \
+                  texlive-fonts-extra \
+                  texlive-latex-extra
+
+            - name: Install Pandoc
+              run: |
+                  LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | jq -r '.assets[] | select(.name | endswith("-linux-amd64.tar.gz")) | .browser_download_url' | head -n 1) && \
+                  curl -L -o pandoc.tar.gz $LATEST_RELEASE_URL && \
+                  tar -xvzf pandoc.tar.gz --strip-components 1 -C /usr/local && \
+                  rm pandoc.tar.gz && \
+                  pandoc --version
+
+            - name: Install Pandoc Filters
+              run: make docs-install
 
             - name: Generate README
               run: make docs
 
             - name: Commit and Push Changes
               run: |
-                git config --local user.email "${{ github.actor }}@users.noreply.github.com"
-                git config --local user.name "${{ github.actor }}"
-                git add README.md README.pdf
-                git diff --cached --quiet || git commit -m "Update README files"
-                git push origin main
+                  git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+                  git config --local user.name "${{ github.actor }}"
+                  git add README.md README.pdf
+                  git diff --cached --quiet || git commit -m "Update README files"
+                  git push origin main
