@@ -22,6 +22,7 @@ jobs:
                   make \
                   jq \
                   unzip \
+                  texlive \
                   texlive-latex-base \
                   texlive-fonts-recommended \
                   texlive-fonts-extra \
