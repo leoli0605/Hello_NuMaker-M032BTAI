@@ -1,0 +1,39 @@
+name: update README files
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install Required Packages
+              run: |
+                sudo apt-get update && sudo apt-get install -y \
+                make \
+                jq \
+                unzip \
+                pandoc \
+                texlive-latex-base \
+                texlive-fonts-recommended \
+                texlive-fonts-extra \
+                texlive-latex-extra && \
+                make docs-install
+
+            - name: Generate README
+              run: make docs
+
+            - name: Commit and Push Changes
+              run: |
+                git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+                git config --local user.name "${{ github.actor }}"
+                git add README.md README.pdf
+                git diff --cached --quiet || git commit -m "Update README files"
+                git push origin main
