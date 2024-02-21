@@ -231,6 +231,30 @@ $(BUILD_DIR):
 	mkdir $@
 
 #######################################
+# docker build
+#######################################
+docker:
+ifeq ($(OS),Windows_NT)
+	@powershell -Command "$$IMAGE_NAME='jafee201153/arm-none-eabi-gcc:13.2.Rel1-ubuntu-20.04'; \
+	$$DOCKER_RUN='docker run -it --rm -v $${PWD}:/share $$IMAGE_NAME'; \
+	$$imageExists = docker images -q $$IMAGE_NAME; \
+	if (-not $$imageExists) { \
+		Write-Host 'Image $$IMAGE_NAME not found locally, pulling...'; \
+		docker pull $$IMAGE_NAME; \
+	}; \
+	$$DOCKER_CMD = $$DOCKER_RUN + ' sh -c \"cd /share && make clean && make\"'; \
+	Invoke-Expression $$DOCKER_CMD"
+else
+	@IMAGE_NAME="jafee201153/arm-none-eabi-gcc:13.2.Rel1-ubuntu-20.04"; \
+	DOCKER_RUN="docker run -it --rm -v $${PWD}:/share $$IMAGE_NAME"; \
+	if [ -z "$$(docker images -q $$IMAGE_NAME)" ]; then \
+		echo "Image $$IMAGE_NAME not found locally, pulling..."; \
+		docker pull $$IMAGE_NAME; \
+	fi; \
+	$$DOCKER_RUN sh -c "cd /share && make clean && make"
+endif
+
+#######################################
 # clean up
 #######################################
 clean:
@@ -256,8 +280,11 @@ rebuild: clean all
 #######################################
 # upgrade
 #######################################
-upgrade:
+update:
 	git submodule update --init --recursive
+
+upgrade:
+	make update
 # ifeq ($(OS),Windows_NT)
 # 	copy $(subst /,\,$(CURDIR))\assets\utility_config.h $(subst /,\,$(CURDIR))\Source\UtilityClang\utility_config.h
 # else
