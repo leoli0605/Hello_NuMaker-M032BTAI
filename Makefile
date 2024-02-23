@@ -40,10 +40,11 @@ ifeq ($(OS),Windows_NT)
 # windows path: your\build\path
 fixpath = $(if $(findstring ",$(1)"),$(subst \,\\,$(1)),$(1))
 BUILD_DIR := $(call fixpath,Source\build)
-# BUILD_DIR := Source\build
+OUT_DIR := $(call fixpath,Source\build\out)
 else
 # linux path: your/build/path
 BUILD_DIR := Source/build
+OUT_DIR := Source/build/out
 endif
 
 ######################################
@@ -205,16 +206,16 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 # build the application
 #######################################
 # list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+OBJECTS = $(addprefix $(OUT_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
 # list of ASM program objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.S=.o)))
+OBJECTS += $(addprefix $(OUT_DIR)/,$(notdir $(ASM_SOURCES:.S=.o)))
 vpath %.S $(sort $(dir $(ASM_SOURCES)))
 
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+$(OUT_DIR)/%.o: %.c Makefile | $(OUT_DIR)
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(OUT_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
-$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
+$(OUT_DIR)/%.o: %.S Makefile | $(OUT_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
@@ -227,8 +228,12 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(BIN) $< $@
 
-$(BUILD_DIR):
-	mkdir $@
+$(OUT_DIR):
+ifeq ($(OS),Windows_NT)
+	if not exist "$(OUT_DIR)" mkdir $(OUT_DIR)
+else
+	mkdir -p $(OUT_DIR)
+endif
 
 #######################################
 # docker build
@@ -259,10 +264,10 @@ endif
 #######################################
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q /F "$(BUILD_DIR)"
+	del /Q /F "$(BUILD_DIR)" && rmdir /Q /S "$(OUT_DIR)"
 	$(foreach asmfile,$(ASM_BASENAMES),del /Q /F "$(asmfile).s" &)
 else
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) && rm -rf $(OUT_DIR)
 	$(foreach asmfile,$(ASM_BASENAMES),rm -f "$(asmfile).s";)
 endif
 
@@ -342,6 +347,6 @@ endif
 #######################################
 # dependencies
 #######################################
--include $(wildcard $(BUILD_DIR)/*.d)
+-include $(wildcard $(OUT_DIR)/*.d)
 
 # *** EOF ***
