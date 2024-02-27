@@ -136,6 +136,7 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
+-ISource \
 -ISource/BleAppProfile \
 -ISource/Driver \
 -ISource/Driver/lsm6dso16is \
@@ -149,7 +150,6 @@ C_INCLUDES =  \
 -ISource/Service/GAP \
 -ISource/Service/GATT \
 -ISource/Service/UDF01S \
--ISource
 
 
 # compile gcc flags
