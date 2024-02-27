@@ -47,36 +47,22 @@ endif
 ######################################
 # C sources
 C_SOURCES =  \
-Source/BleAppProfile/ble_profile_app.c \
-Source/BleAppProfile/ble_profile_def.c \
-Source/Lib/ble_bonding_storage.c \
-Source/Lib/ble_LL_ref.c \
-Source/Lib/ble_msgblock.c \
-Source/Library/Device/Nuvoton/M031/Source/GCC/_syscalls.c \
-Source/Library/Device/Nuvoton/M031/Source/system_M031Series.c \
-Source/Library/StdDriver/src/clk.c \
-Source/Library/StdDriver/src/fmc.c \
-Source/Library/StdDriver/src/gpio.c \
-Source/Library/StdDriver/src/i2c.c \
-Source/Library/StdDriver/src/pdma.c \
-Source/Library/StdDriver/src/retarget.c \
-Source/Library/StdDriver/src/spi.c \
-Source/Library/StdDriver/src/sys.c \
-Source/Library/StdDriver/src/timer.c \
-Source/Library/StdDriver/src/uart.c \
-Source/Library/StdDriver/src/wdt.c \
-Source/Porting/dev_addr.c \
-Source/Porting/porting_flash.c \
-Source/Porting/porting_misc.c \
-Source/Porting/porting_rfpower.c \
-Source/Porting/porting_spi.c \
-Source/Service/BleServiceBase/ble_service_base.c \
-Source/Service/DIS/ble_service_dis.c \
-Source/Service/GAP/ble_service_gap.c \
-Source/Service/GATT/ble_service_gatt.c \
-Source/Service/UDF01S/ble_service_udf01s.c \
-Source/user.c \
-Source/main.c
+$(wildcard Source/*.c) \
+$(wildcard Source/BleAppProfile/*.c) \
+$(wildcard Source/Lib/*.c) \
+$(wildcard Source/Library/Device/Nuvoton/M031/Source/GCC/_syscalls.c) \
+$(wildcard Source/Library/Device/Nuvoton/M031/Source/system_M031Series.c) \
+$(wildcard Source/Library/StdDriver/src/*.c) \
+$(wildcard Source/Porting/dev_addr.c) \
+$(wildcard Source/Porting/porting_flash.c) \
+$(wildcard Source/Porting/porting_misc.c) \
+$(wildcard Source/Porting/porting_rfpower.c) \
+$(wildcard Source/Porting/porting_spi.c) \
+$(wildcard Source/Service/BleServiceBase/*.c) \
+$(wildcard Source/Service/DIS/*.c) \
+$(wildcard Source/Service/GAP/*.c) \
+$(wildcard Source/Service/GATT/*.c) \
+$(wildcard Source/Service/UDF01S/*.c) \
 
 # ASM sources
 ASM_SOURCES =  \
