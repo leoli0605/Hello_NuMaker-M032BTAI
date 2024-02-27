@@ -245,11 +245,13 @@ endif
 #######################################
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q /F "$(BUILD_DIR)" && rmdir /Q /S "$(OUT_DIR)"
-	$(foreach asmfile,$(ASM_BASENAMES),del /Q /F "$(asmfile).s" &)
+	@if exist "$(OUT_DIR)" rmdir /s /q $(OUT_DIR)
+	@if exist "$(BUILD_DIR)" rmdir /s /q $(BUILD_DIR)
+	@$(foreach asmfile,$(ASM_BASENAMES),del /Q /F "$(asmfile).s" &)
 else
-	rm -rf $(BUILD_DIR) && rm -rf $(OUT_DIR)
-	$(foreach asmfile,$(ASM_BASENAMES),rm -f "$(asmfile).s";)
+	@rm -rf $(OUT_DIR)
+	@rm -rf $(BUILD_DIR)
+	@$(foreach asmfile,$(ASM_BASENAMES),rm -f "$(asmfile).s";)
 endif
 
 #######################################
