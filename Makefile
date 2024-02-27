@@ -1,10 +1,5 @@
 # ------------------------------------------------
 # Generic Makefile (based on gcc)
-#
-# ChangeLog :
-#       2023-11-21 - Make the project can be auto-selected by the user setup
-#	2017-02-10 - Several enhancements + project update mode
-#   2015-07-22 - first version
 # ------------------------------------------------
 
 ifeq ($(OS),Windows_NT)
