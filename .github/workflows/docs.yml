@@ -16,27 +16,18 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Install Required Packages
-              run: |
-                  sudo apt update && \
-                  sudo apt upgrade -y && \
-                  sudo apt install -y \
-                  make \
-                  jq \
-                  unzip \
-                  texlive-latex-base \
-                  texlive-fonts-recommended \
-                  texlive-fonts-extra \
-                  texlive-latex-extra \
-                  texlive-xetex
+            - name: Install asdf & tools
+              uses: asdf-vm/actions/setup@v3
 
-            - name: Install Pandoc
+            - name: Install Pandoc & TinyTeX
               run: |
-                  LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | jq -r '.assets[] | select(.name | endswith("-linux-amd64.tar.gz")) | .browser_download_url' | head -n 1) && \
-                  curl -L -o pandoc.tar.gz $LATEST_RELEASE_URL && \
-                  sudo tar -xvzf pandoc.tar.gz --strip-components 1 -C /usr/local && \
-                  rm pandoc.tar.gz && \
+                  asdf plugin add pandoc
+                  asdf install pandoc latest
+                  asdf global pandoc latest
                   pandoc --version
+                  asdf plugin add tinytex
+                  asdf install tinytex latest
+                  asdf global tinytex latest
 
             - name: Install Pandoc Filters
               run: make docs-install
@@ -47,8 +38,6 @@ jobs:
                   mkdir ~/.npm-global
                   npm config set prefix '~/.npm-global'
                   export PATH=~/.npm-global/bin:$PATH
-                  echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-                  source ~/.bashrc
                   npm install -g @mermaid-js/mermaid-cli
 
             - name: Generate README
